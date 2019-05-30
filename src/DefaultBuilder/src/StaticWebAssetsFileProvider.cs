@@ -34,7 +34,7 @@ namespace Microsoft.AspNetCore
             }
             else
             {
-                return InnerProvider.GetDirectoryContents(physicalPath);
+                return InnerProvider.GetDirectoryContents(physicalPath.Value);
             }
         }
 
