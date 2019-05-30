@@ -78,16 +78,16 @@ namespace Microsoft.AspNetCore.Server.Kestrel.FunctionalTests
 
                     using (var socket = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified))
                     {
-                        socket.Connect(new UnixDomainSocketEndPoint(path));
+                        await socket.ConnectAsync(new UnixDomainSocketEndPoint(path));
 
                         var data = Encoding.ASCII.GetBytes("Hello World");
-                        socket.Send(data);
+                        await socket.SendAsync(data, SocketFlags.None);
 
                         var buffer = new byte[data.Length];
                         var read = 0;
                         while (read < data.Length)
                         {
-                            read += socket.Receive(buffer, read, buffer.Length - read, SocketFlags.None);
+                            read += await socket.ReceiveAsync(buffer.AsMemory(read, buffer.Length - read), SocketFlags.None);
                         }
 
                         Assert.Equal(data, buffer);
